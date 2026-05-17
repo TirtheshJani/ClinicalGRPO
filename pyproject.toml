@@ -33,9 +33,13 @@ dev = ["pytest", "ruff", "pre-commit"]
 app = ["gradio>=5", "spaces"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["clinical_grpo"]
+packages = ["src/clinical_grpo"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/", "configs/", "scripts/", "app/", "tests/"]
 
 [tool.pytest.ini_options]
+pythonpath = ["src"]
 markers = [
     "gpu: requires a CUDA device (Unsloth + TRL GRPOTrainer smoke)",
 ]
