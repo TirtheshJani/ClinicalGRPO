@@ -44,10 +44,10 @@ def micro_code_f1(preds: list[list[str]], golds: list[list[str]]) -> F1Result:
 
 def chapter_f1(preds: list[list[str]], golds: list[list[str]]) -> F1Result:
     """Micro-F1 at the chapter level (more forgiving than exact-code F1)."""
-    pred_chapters = [
-        [chapter_of(c) for c in p if chapter_of(c) is not None] for p in preds
+    pred_chapters: list[list[str]] = [
+        [ch for c in p if (ch := chapter_of(c)) is not None] for p in preds
     ]
-    gold_chapters = [
-        [chapter_of(c) for c in g if chapter_of(c) is not None] for g in golds
+    gold_chapters: list[list[str]] = [
+        [ch for c in g if (ch := chapter_of(c)) is not None] for g in golds
     ]
     return micro_code_f1(pred_chapters, gold_chapters)

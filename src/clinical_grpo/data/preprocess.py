@@ -14,6 +14,8 @@ from pathlib import Path
 import pandas as pd
 
 from clinical_grpo.data import mimic_demo, synthea
+from clinical_grpo.data.mimic_demo import MimicRecord
+from clinical_grpo.data.synthea import SyntheaRecord
 from clinical_grpo.utils.icd10 import dedupe_codes, is_valid
 
 MAX_CHARS = 8000  # ~2048 tokens at typical English ratio; final truncation done by tokenizer
@@ -67,6 +69,7 @@ def main() -> None:
     args = p.parse_args()
 
     root = args.root or Path("data/raw") / args.source
+    records: list[MimicRecord] | list[SyntheaRecord]
     if args.source == "mimic_demo":
         records = mimic_demo.load_demo(root)
         patient_col = "subject_id"

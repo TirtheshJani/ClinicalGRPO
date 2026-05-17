@@ -20,5 +20,12 @@ jobs:
       - name: Lint
         run: ruff check .
 
+      - name: Type check (mypy)
+        run: |
+          python -m mypy src/clinical_grpo/utils/ src/clinical_grpo/rewards/ \
+            src/clinical_grpo/prompts/ src/clinical_grpo/eval/f1.py \
+            src/clinical_grpo/data/dataset.py src/clinical_grpo/data/preprocess.py \
+            --ignore-missing-imports
+
       - name: Test
         run: pytest tests/ -x -q --ignore=tests/test_smoke_train.py
