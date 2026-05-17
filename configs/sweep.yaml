@@ -1,0 +1,10 @@
+# GRPO hyperparameter sweep.
+# Run: python scripts/sweep.py --sweep configs/sweep.yaml --config configs/train.yaml --hw configs/hardware/rtx4080.yaml
+
+sweep:
+  params:
+    grpo.beta: [0.01, 0.04, 0.1]
+    grpo.learning_rate: [1.0e-5, 5.0e-6]
+    grpo.num_generations: [4, 8]
+  max_steps: 50
+  output_csv: outputs/sweep_results.csv
