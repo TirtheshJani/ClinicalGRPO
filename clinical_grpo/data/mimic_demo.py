@@ -29,13 +29,63 @@ class MimicRecord:
     icd10_codes: list[str]
 
 
-def load_demo(root: Path | str) -> list[MimicRecord]:
-    """Join discharge summaries with their ICD-9 diagnoses; map to ICD-10.
+_GEM_PATH = Path("data/raw/gem/2018_I9gem.txt")
+_gem_map: dict[str, list[str]] | None = None
 
-    TODO: implement ICD-9 -> ICD-10 mapping via the CMS GEM file (ship under
-    `data/raw/gem/2018_I9gem.txt`). For now this returns the ICD-9 codes as-is
-    so the rest of the pipeline can be exercised end-to-end.
+
+def _load_gem() -> dict[str, list[str]]:
+    """Parse CMS ICD-9 → ICD-10 GEM file into a dict.
+
+    Returns empty dict if file not found (degrades gracefully for unit tests).
+    Maps each ICD-9 code to a list of ICD-10 codes, preferring exact matches
+    (flag starts with '0') over approximate ones.
     """
+    global _gem_map
+    if _gem_map is not None:
+        return _gem_map
+    if not _GEM_PATH.exists():
+        _gem_map = {}
+        return _gem_map
+
+    exact: dict[str, list[str]] = {}
+    approx: dict[str, list[str]] = {}
+    for line in _GEM_PATH.read_text().splitlines():
+        parts = line.split()
+        if len(parts) < 3:
+            continue
+        i9, i10, flags = parts[0], parts[1], parts[2]
+        # NoDx and combo entries have special ICD-10 codes like "NoDx" — skip them
+        if not i10[0].isalpha() or len(i10) < 3:
+            continue
+        if flags[0] == '0':
+            exact.setdefault(i9, []).append(i10)
+        else:
+            approx.setdefault(i9, []).append(i10)
+    _gem_map = {k: v for k, v in exact.items()}
+    for k, v in approx.items():
+        if k not in _gem_map:
+            _gem_map[k] = v
+    return _gem_map
+
+
+def _icd9_to_icd10(icd9_codes: list[str]) -> list[str]:
+    """Map ICD-9 codes to ICD-10 via CMS GEM. Unknown codes are dropped."""
+    gem = _load_gem()
+    if not gem:
+        return icd9_codes
+    out: list[str] = []
+    seen: set[str] = set()
+    for c9 in icd9_codes:
+        c9_norm = c9.strip().upper().replace(".", "")
+        for c10 in gem.get(c9_norm, []):
+            if c10 not in seen:
+                seen.add(c10)
+                out.append(c10)
+    return out
+
+
+def load_demo(root: Path | str) -> list[MimicRecord]:
+    """Join discharge summaries with their ICD-9 diagnoses; map to ICD-10."""
     root = Path(root)
     notes = pd.read_csv(root / "NOTEEVENTS.csv", low_memory=False)
     diag = pd.read_csv(root / "DIAGNOSES_ICD.csv")
@@ -67,8 +117,3 @@ def load_demo(root: Path | str) -> list[MimicRecord]:
             )
         )
     return records
-
-
-def _icd9_to_icd10(icd9_codes: list[str]) -> list[str]:
-    """TODO: real GEM mapping. Returns the inputs unchanged for now."""
-    return list(icd9_codes)
