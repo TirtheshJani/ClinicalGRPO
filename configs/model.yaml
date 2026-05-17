@@ -1,0 +1,20 @@
+# Hardware-agnostic model + adapter configuration.
+# RTX 4080-specific knobs live in configs/hardware/rtx4080.yaml.
+
+base_model: Qwen/Qwen3-4B-Instruct
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.0
+  bias: none
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+chat_template: qwen  # use the model's built-in template

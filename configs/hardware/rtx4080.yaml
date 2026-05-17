@@ -1,0 +1,17 @@
+# RTX 4080 (16 GB) profile.
+# Merged on top of configs/train.yaml at runtime.
+
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 8
+gradient_checkpointing: true
+use_gradient_checkpointing: unsloth   # Unsloth's optimized variant
+fp16: true
+bf16: false
+max_seq_length: 2048
+
+# Unsloth FastLanguageModel.from_pretrained kwargs
+load_in_4bit: true
+dtype: null                           # let Unsloth pick fp16 on Ada
+
+# At num_generations=8, batch=2 means 16 generations per step.
+# Reduce num_generations to 4 in configs/train.yaml if OOM during generation.
