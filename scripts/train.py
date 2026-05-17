@@ -13,8 +13,13 @@ def main(
     config: Path = Path("configs/train.yaml"),
     hw: Path = Path("configs/hardware/rtx4080.yaml"),
     max_steps: int | None = None,
+    resume_from: str | None = None,
+    wandb: Path | None = None,
 ) -> None:
-    cfg = load_config(config, hw)
+    extra = [wandb] if wandb is not None else []
+    cfg = load_config(config, hw, extra_cfgs=extra)
+    if resume_from is not None:
+        cfg["resume_from"] = resume_from
     adapter = train(cfg, max_steps_override=max_steps)
     print(f"adapter saved to: {adapter}")
 

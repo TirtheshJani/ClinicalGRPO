@@ -1,0 +1,9 @@
+# W&B experiment tracking. Pass via: scripts/train.py --wandb configs/wandb.yaml
+# Requires: pip install wandb && wandb login
+
+report_to: [wandb]
+
+wandb:
+  project: clinical-grpo
+  run_name: null
+  tags: [grpo, icd10, qwen3-4b]
