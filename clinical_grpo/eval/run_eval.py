@@ -20,7 +20,6 @@ def generate_predictions(adapter_path: Path, dataset, max_new_tokens: int = 512)
     """Run greedy generation against the dataset and return raw completions."""
     from unsloth import FastLanguageModel
 
-    base_model_name = (adapter_path / "adapter_config.json")
     # Adapter dir carries the base model id in its config; let Unsloth read it.
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=str(adapter_path),

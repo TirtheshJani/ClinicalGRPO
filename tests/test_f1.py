@@ -1,4 +1,4 @@
-from clinical_grpo.eval.f1 import F1Result, chapter_f1, micro_code_f1
+from clinical_grpo.eval.f1 import chapter_f1, micro_code_f1
 
 
 def test_perfect_prediction_f1_is_one():

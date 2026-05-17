@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Any
 
 from clinical_grpo.data.dataset import load_grpo_dataset
-from clinical_grpo.prompts.templates import build_chat
 
 
 def _build_sft_dataset(parquet_path: str, tokenizer: Any) -> Any:
