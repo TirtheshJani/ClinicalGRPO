@@ -66,6 +66,14 @@ def main() -> None:
         "chapter_f1": asdict(chapter_f1(preds, golds)),
     }
 
+    from clinical_grpo.eval.bootstrap import bootstrap_f1_ci
+    ci = bootstrap_f1_ci(preds, golds, n_resamples=1000, seed=42)
+    report["micro_code_f1_bootstrap"] = {
+        "mean": ci.mean_f1,
+        "ci_low_95": ci.ci_low,
+        "ci_high_95": ci.ci_high,
+    }
+
     if args.judge == "groq":
         from clinical_grpo.eval.groq_judge import GroqJudge
 
