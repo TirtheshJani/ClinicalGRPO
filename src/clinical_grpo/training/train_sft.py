@@ -13,6 +13,11 @@ from typing import Any
 
 from clinical_grpo.data.dataset import load_grpo_dataset
 
+try:
+    from trl import SFTConfig, SFTTrainer
+except ImportError:  # pragma: no cover
+    pass
+
 
 def _build_sft_dataset(parquet_path: str, tokenizer: Any) -> Any:
     from datasets import Dataset
@@ -36,7 +41,6 @@ def _build_sft_dataset(parquet_path: str, tokenizer: Any) -> Any:
 def train_sft(cfg: dict[str, Any], max_steps_override: int | None = None) -> Path:
     """Run SFT training. Returns path to saved LoRA adapter."""
     from unsloth import FastLanguageModel
-    from trl import SFTConfig, SFTTrainer
 
     model_cfg = cfg["model"]
     sft = cfg.get("sft", {})
@@ -85,6 +89,7 @@ def train_sft(cfg: dict[str, Any], max_steps_override: int | None = None) -> Pat
         seed=cfg.get("seed", 42),
         dataset_text_field="text",
         packing=False,
+        resume_from_checkpoint=cfg.get("resume_from"),
     )
 
     trainer = SFTTrainer(
