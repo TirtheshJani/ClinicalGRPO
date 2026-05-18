@@ -1,0 +1,14 @@
+# A100 (40/80 GB SXM) profile. Merged on top of configs/train.yaml at runtime.
+
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 4
+gradient_checkpointing: true
+use_gradient_checkpointing: unsloth
+fp16: false
+bf16: true
+max_seq_length: 2048
+
+load_in_4bit: false   # A100 has enough VRAM for full bfloat16
+dtype: null           # let Unsloth pick bf16
+
+# With num_generations=8, batch=4 gives 32 samples per step — 2× throughput vs RTX 4080.

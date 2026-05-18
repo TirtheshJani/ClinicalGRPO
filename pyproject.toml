@@ -29,17 +29,36 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff", "pre-commit"]
+dev = ["pytest", "ruff", "pre-commit", "mypy"]
 app = ["gradio>=5", "spaces"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["clinical_grpo"]
+packages = ["src/clinical_grpo"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/", "configs/", "scripts/", "app/", "tests/"]
 
 [tool.pytest.ini_options]
+pythonpath = ["src"]
 markers = [
     "gpu: requires a CUDA device (Unsloth + TRL GRPOTrainer smoke)",
 ]
 testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = false
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_return_any = false
+show_error_codes = true
+exclude = [
+    "src/clinical_grpo/training/",
+    "src/clinical_grpo/data/mimic_demo\\.py",
+    "src/clinical_grpo/data/synthea\\.py",
+    "src/clinical_grpo/eval/groq_judge\\.py",
+    "src/clinical_grpo/eval/run_eval\\.py",
+]
 
 [tool.ruff]
 line-length = 100

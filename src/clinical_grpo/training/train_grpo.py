@@ -15,6 +15,11 @@ import yaml
 from clinical_grpo.data.dataset import load_grpo_dataset
 from clinical_grpo.rewards.composite import build_reward_funcs
 
+try:
+    from trl import GRPOConfig, GRPOTrainer
+except ImportError:  # pragma: no cover
+    pass
+
 
 def _deep_merge(base: dict, override: dict) -> dict:
     out = dict(base)
@@ -26,11 +31,18 @@ def _deep_merge(base: dict, override: dict) -> dict:
     return out
 
 
-def load_config(train_cfg: Path | str, hw_cfg: Path | str | None = None) -> dict[str, Any]:
+def load_config(
+    train_cfg: Path | str,
+    hw_cfg: Path | str | None = None,
+    extra_cfgs: list[Path | str] | None = None,
+) -> dict[str, Any]:
     with open(train_cfg) as f:
         cfg = yaml.safe_load(f)
     if hw_cfg:
         with open(hw_cfg) as f:
+            cfg = _deep_merge(cfg, yaml.safe_load(f))
+    for extra in (extra_cfgs or []):
+        with open(extra) as f:
             cfg = _deep_merge(cfg, yaml.safe_load(f))
     model_cfg_path = Path(cfg.get("model_config", "configs/model.yaml"))
     with open(model_cfg_path) as f:
@@ -43,7 +55,6 @@ def train(cfg: dict[str, Any], max_steps_override: int | None = None) -> Path:
     # Heavy imports kept inside the function so unit tests can import this
     # module without paying the Unsloth/TRL startup cost.
     from unsloth import FastLanguageModel
-    from trl import GRPOConfig, GRPOTrainer
 
     model_cfg = cfg["model"]
     grpo = cfg["grpo"]
@@ -88,6 +99,7 @@ def train(cfg: dict[str, Any], max_steps_override: int | None = None) -> Path:
         bf16=cfg.get("bf16", False),
         report_to=cfg.get("report_to", []),
         seed=cfg.get("seed", 42),
+        resume_from_checkpoint=cfg.get("resume_from"),
     )
 
     trainer = GRPOTrainer(

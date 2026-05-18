@@ -1,0 +1,14 @@
+# T4 (15 GB, Colab/GCP) profile. Merged on top of configs/train.yaml at runtime.
+
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 16
+gradient_checkpointing: true
+use_gradient_checkpointing: unsloth
+fp16: true
+bf16: false
+max_seq_length: 1536   # reduce from 2048 to fit VRAM
+
+load_in_4bit: true
+dtype: null
+
+# Reduce num_generations to 4 in configs/train.yaml if OOM during generation.

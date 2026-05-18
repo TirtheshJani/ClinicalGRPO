@@ -20,7 +20,6 @@ def generate_predictions(adapter_path: Path, dataset, max_new_tokens: int = 512)
     """Run greedy generation against the dataset and return raw completions."""
     from unsloth import FastLanguageModel
 
-    base_model_name = (adapter_path / "adapter_config.json")
     # Adapter dir carries the base model id in its config; let Unsloth read it.
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=str(adapter_path),
@@ -65,6 +64,14 @@ def main() -> None:
         "n": len(preds),
         "micro_code_f1": asdict(micro_code_f1(preds, golds)),
         "chapter_f1": asdict(chapter_f1(preds, golds)),
+    }
+
+    from clinical_grpo.eval.bootstrap import bootstrap_f1_ci
+    ci = bootstrap_f1_ci(preds, golds, n_resamples=1000, seed=42)
+    report["micro_code_f1_bootstrap"] = {
+        "mean": ci.mean_f1,
+        "ci_low_95": ci.ci_low,
+        "ci_high_95": ci.ci_high,
     }
 
     if args.judge == "groq":

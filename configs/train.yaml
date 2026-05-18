@@ -23,6 +23,14 @@ grpo:
   temperature: 0.9
   top_p: 1.0
 
+sft:
+  max_steps: 500
+  learning_rate: 2.0e-5
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.03
+  save_steps: 100
+  logging_steps: 5
+
 rewards:
   exact_weight: 1.0
   chapter_weight: 0.3

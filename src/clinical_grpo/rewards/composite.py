@@ -15,6 +15,12 @@ from typing import Callable
 from clinical_grpo.utils.icd10 import chapter_of, dedupe_codes, is_valid
 
 _JSON_BLOCK_RE = re.compile(r"\{.*\}", re.DOTALL)
+_THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL)
+
+
+def _strip_thinking(text: str) -> str:
+    """Remove Qwen3-style <think>...</think> blocks before JSON extraction."""
+    return _THINK_RE.sub("", text)
 
 
 def parse_completion(text: str) -> list[str] | None:
@@ -24,6 +30,7 @@ def parse_completion(text: str) -> list[str] | None:
     `codes` list of strings. Invalid codes are dropped from the returned list
     but do not cause the parse to fail (they're penalized elsewhere).
     """
+    text = _strip_thinking(text)
     m = _JSON_BLOCK_RE.search(text)
     if not m:
         return None
