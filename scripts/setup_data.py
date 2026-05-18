@@ -19,20 +19,39 @@ def _check_gem() -> None:
     if GEM_PATH.exists():
         print(f"[ok] GEM crosswalk: {GEM_PATH} ({GEM_PATH.stat().st_size:,} bytes)")
         return
-    print("[downloading] ICD-9→ICD-10 GEM crosswalk ...")
+    print("[downloading] ICD-9 -> ICD-10 GEM crosswalk ...")
     subprocess.run([sys.executable, "scripts/download_gem.py"], check=True)
 
 
 def _check_mimic() -> None:
-    if MIMIC_RAW.exists():
-        csvs = list(MIMIC_RAW.glob("*.csv"))
-        print(f"[ok] MIMIC-III demo: {MIMIC_RAW} ({len(csvs)} CSV files)")
-    else:
+    if not MIMIC_RAW.exists():
         print(
             f"[missing] MIMIC-III demo not found at {MIMIC_RAW}\n"
-            "  Download from https://physionet.org/content/mimiciii-demo/1.4/\n"
-            f"  and extract to {MIMIC_RAW}/"
+            "  Open-access structured tables (no credentialing):\n"
+            "    curl -fsSL -o data/raw/mimic-demo.zip "
+            "https://physionet.org/content/mimiciii-demo/get-zip/1.4/\n"
+            "  Clinical notes (NOTEEVENTS.csv with content) require\n"
+            "  PhysioNet credentialing: https://physionet.org/settings/credentialing/"
         )
+        return
+
+    csvs = list(MIMIC_RAW.glob("*.csv"))
+    note_path = MIMIC_RAW / "NOTEEVENTS.csv"
+    notes_stub = note_path.exists() and note_path.stat().st_size < 1024
+
+    if notes_stub:
+        print(
+            f"[warn] MIMIC-III demo: {MIMIC_RAW} ({len(csvs)} CSV files), "
+            "but NOTEEVENTS.csv is a header-only stub.\n"
+            "  The open-access demo intentionally omits clinical notes for de-id reasons.\n"
+            "  Training will produce empty discharge summaries. To get real notes:\n"
+            "    1. Register + credential at https://physionet.org/settings/credentialing/\n"
+            "    2. Complete CITI 'Data or Specimens Only Research' training (~2h, free)\n"
+            "    3. Sign the MIMIC-III data use agreement\n"
+            "    4. Replace NOTEEVENTS.csv with the credentialed version"
+        )
+    else:
+        print(f"[ok] MIMIC-III demo: {MIMIC_RAW} ({len(csvs)} CSV files, notes present)")
 
 
 def _check_synthea() -> None:
