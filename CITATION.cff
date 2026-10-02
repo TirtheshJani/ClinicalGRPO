@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+title: "ClinicalGRPO: GRPO post-training of Qwen3-4B-Instruct for ICD-10-CM coding with verifiable rewards"
+type: software
+authors:
+  - family-names: Jani
+    given-names: Tirthesh
+repository-code: "https://github.com/TirtheshJani/ClinicalGRPO"
+license: MIT
+version: 0.1.0
+keywords:
+  - reinforcement learning
+  - GRPO
+  - RLVR
+  - ICD-10
+  - clinical NLP
+  - large language models

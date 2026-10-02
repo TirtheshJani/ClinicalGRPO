@@ -9,7 +9,7 @@ description = "GRPO post-training of Qwen3-4B-Instruct for ICD-10 coding from cl
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
-authors = [{ name = "ClinicalGRPO contributors" }]
+authors = [{ name = "Tirthesh Jani" }]
 dependencies = [
     "unsloth>=2025.3",
     "trl>=0.15,<0.18",
