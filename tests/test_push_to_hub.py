@@ -1,7 +1,9 @@
 # tests/test_push_to_hub.py
 import sys
-import pytest
 from pathlib import Path
+
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
@@ -9,14 +11,16 @@ def test_cli_help():
     import subprocess
     r = subprocess.run(
         [sys.executable, "scripts/push_to_hub.py", "--help"],
-        capture_output=True, text=True, cwd="/home/user/ClinicalGRPO"
+        capture_output=True, text=True, check=False,
+        cwd=str(Path(__file__).resolve().parent.parent),
     )
     assert r.returncode == 0
     assert "repo" in r.stdout.lower()
 
 
 def test_push_calls_upload_folder(tmp_path):
-    from unittest.mock import patch, MagicMock
+    from unittest.mock import MagicMock, patch
+
     from scripts.push_to_hub import push_adapter
 
     adapter_dir = tmp_path / "adapter"

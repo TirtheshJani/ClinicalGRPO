@@ -147,7 +147,7 @@ def test_one_sft_step(tmp_path):
     # ------------------------------------------------------------------
     # (d) Adapter reloads without error.
     # ------------------------------------------------------------------
-    from unsloth import FastLanguageModel  # noqa: PLC0415 — heavy; GPU test only
+    from unsloth import FastLanguageModel
 
     reloaded_model, reloaded_tokenizer = FastLanguageModel.from_pretrained(
         str(adapter_path),
@@ -161,7 +161,7 @@ def test_one_sft_step(tmp_path):
     #     SFT output format is less constrained than GRPO — we do not
     #     require valid JSON; just that generation completes without error.
     # ------------------------------------------------------------------
-    from clinical_grpo.prompts.templates import build_chat  # noqa: PLC0415
+    from clinical_grpo.prompts.templates import build_chat
 
     prompt_messages = build_chat("Patient with hypertension.")
     input_ids = reloaded_tokenizer.apply_chat_template(

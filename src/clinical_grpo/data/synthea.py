@@ -14,7 +14,6 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-
 _ICD10_CM_SYSTEM = "http://hl7.org/fhir/sid/icd-10-cm"
 
 

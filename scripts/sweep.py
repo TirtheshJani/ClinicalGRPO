@@ -52,7 +52,7 @@ def main(
         try:
             train(cfg, max_steps_override=max_steps)
             results.append({"run": i, "status": "ok", **override})
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 (record failure, keep sweeping)
             results.append({"run": i, "status": f"error: {e}", **override})
 
     fieldnames = ["run", "status"] + list(overrides[0].keys())

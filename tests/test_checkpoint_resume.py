@@ -35,6 +35,7 @@ def test_resume_from_key_in_yaml(tmp_path):
 def test_grpo_train_source_passes_resume_from_checkpoint():
     """train() source code forwards cfg['resume_from'] to GRPOConfig."""
     import inspect
+
     from clinical_grpo.training import train_grpo
     src = inspect.getsource(train_grpo.train)
     assert "resume_from_checkpoint" in src
@@ -44,6 +45,7 @@ def test_grpo_train_source_passes_resume_from_checkpoint():
 def test_sft_train_source_passes_resume_from_checkpoint():
     """train_sft() source code forwards cfg['resume_from'] to SFTConfig."""
     import inspect
+
     from clinical_grpo.training import train_sft
     src = inspect.getsource(train_sft.train_sft)
     assert "resume_from_checkpoint" in src
