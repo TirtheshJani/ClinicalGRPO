@@ -18,6 +18,13 @@ from clinical_grpo.data.mimic_demo import MimicRecord
 from clinical_grpo.data.synthea import SyntheaRecord
 from clinical_grpo.utils.icd10 import dedupe_codes, is_valid
 
+# Where each source's raw files live by default. mimic-iii-demo matches the
+# directory the PhysioNet demo zip extracts to (see scripts/setup_data.py).
+DEFAULT_RAW_ROOTS = {
+    "mimic_demo": Path("data/raw/mimic-iii-demo"),
+    "synthea": Path("data/raw/synthea"),
+}
+
 MAX_CHARS = 8000  # ~2048 tokens at typical English ratio; final truncation done by tokenizer
 
 
@@ -64,11 +71,11 @@ def patient_split(
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--source", choices=["mimic_demo", "synthea"], required=True)
-    p.add_argument("--root", type=Path, default=None, help="Source data root (default: data/raw/<source>)")
+    p.add_argument("--root", type=Path, default=None, help="Source data root (default: data/raw/mimic-iii-demo or data/raw/synthea)")
     p.add_argument("--out", type=Path, required=True, help="Output parquet path (train split)")
     args = p.parse_args()
 
-    root = args.root or Path("data/raw") / args.source
+    root = args.root or DEFAULT_RAW_ROOTS[args.source]
     records: list[MimicRecord] | list[SyntheaRecord]
     if args.source == "mimic_demo":
         records = mimic_demo.load_demo(root)

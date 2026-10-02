@@ -105,3 +105,14 @@ def test_patient_split_different_seeds_differ():
     s1 = patient_split(df, "patient_id", seed=1)
     s2 = patient_split(df, "patient_id", seed=2)
     assert list(s1["train"]["patient_id"]) != list(s2["train"]["patient_id"])
+
+
+def test_default_raw_roots_match_setup_data_layout():
+    """preprocess --source mimic_demo must look where setup_data.py and the
+    PhysioNet zip put the files (data/raw/mimic-iii-demo), not data/raw/mimic_demo."""
+    from pathlib import Path
+
+    from clinical_grpo.data.preprocess import DEFAULT_RAW_ROOTS
+
+    assert DEFAULT_RAW_ROOTS["mimic_demo"] == Path("data/raw/mimic-iii-demo")
+    assert DEFAULT_RAW_ROOTS["synthea"] == Path("data/raw/synthea")
