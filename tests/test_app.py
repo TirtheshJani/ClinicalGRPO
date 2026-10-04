@@ -1,6 +1,7 @@
 """Tests for app/app.py:predict() with Unsloth mocked out."""
 import json
 import sys
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 
@@ -38,7 +39,7 @@ def _make_app_predict(completion: str):
     fake_gradio = MagicMock()
 
     with patch.dict(sys.modules, {"unsloth": fake_unsloth, "spaces": fake_spaces, "gradio": fake_gradio}):
-        sys.path.insert(0, "/home/user/ClinicalGRPO")
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
         import app.app as app_module
         # Bypass _load() so Unsloth is never actually called
         app_module._pipeline = (mock_model, mock_tok)

@@ -3,8 +3,7 @@
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from clinical_grpo.eval.groq_judge import _cache_key, GroqJudge
-
+from clinical_grpo.eval.groq_judge import GroqJudge, _cache_key
 
 # ---------------------------------------------------------------------------
 # _cache_key helpers

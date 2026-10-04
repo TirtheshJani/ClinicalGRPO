@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from pathlib import Path
 
 import pandas as pd
 
@@ -107,7 +108,7 @@ def test_reward_handles_malformed_and_missing():
 # 4. CLI entry points parse without error
 # ---------------------------------------------------------------------------
 
-_CWD = "/home/user/ClinicalGRPO"
+_CWD = str(Path(__file__).resolve().parent.parent)
 
 
 def test_train_cli_help():
@@ -116,6 +117,7 @@ def test_train_cli_help():
         capture_output=True,
         text=True,
         cwd=_CWD,
+        check=False,
     )
     assert result.returncode == 0
     assert "config" in result.stdout.lower()
@@ -127,6 +129,7 @@ def test_train_sft_cli_help():
         capture_output=True,
         text=True,
         cwd=_CWD,
+        check=False,
     )
     assert result.returncode == 0
 
@@ -137,6 +140,7 @@ def test_eval_cli_help():
         capture_output=True,
         text=True,
         cwd=_CWD,
+        check=False,
     )
     assert result.returncode == 0
 
@@ -147,6 +151,7 @@ def test_preprocess_cli_help():
         capture_output=True,
         text=True,
         cwd=_CWD,
+        check=False,
     )
     assert result.returncode == 0
 
