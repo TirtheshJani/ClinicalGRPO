@@ -32,8 +32,8 @@ def test_one_grpo_step(tmp_path):
 
     import pandas as pd
 
-    from clinical_grpo.training.train_grpo import train
     from clinical_grpo.rewards.composite import parse_completion
+    from clinical_grpo.training.train_grpo import train
 
     # ------------------------------------------------------------------
     # 1. Build a minimal synthetic parquet (4 rows, 2 patients).
@@ -178,7 +178,7 @@ def test_one_grpo_step(tmp_path):
     # ------------------------------------------------------------------
     # (c) Adapter reloads without error.
     # ------------------------------------------------------------------
-    from unsloth import FastLanguageModel  # noqa: PLC0415 — heavy; GPU test only
+    from unsloth import FastLanguageModel
 
     reloaded_model, reloaded_tokenizer = FastLanguageModel.from_pretrained(
         str(adapter_path),
@@ -192,7 +192,7 @@ def test_one_grpo_step(tmp_path):
     #     parse_completion() returns None or a list — either is acceptable;
     #     the important thing is no exception is raised.
     # ------------------------------------------------------------------
-    from clinical_grpo.prompts.templates import build_chat  # noqa: PLC0415
+    from clinical_grpo.prompts.templates import build_chat
 
     prompt_messages = build_chat("Patient with hypertension.")
     input_ids = reloaded_tokenizer.apply_chat_template(

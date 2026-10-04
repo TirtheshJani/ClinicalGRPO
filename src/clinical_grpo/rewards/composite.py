@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Callable
+from collections.abc import Callable
 
 from clinical_grpo.utils.icd10 import chapter_of, dedupe_codes, is_valid
 

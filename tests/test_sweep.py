@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
@@ -44,6 +45,7 @@ def test_sweep_cli_help():
     import subprocess
     r = subprocess.run(
         [sys.executable, "scripts/sweep.py", "--help"],
-        capture_output=True, text=True, cwd="/home/user/ClinicalGRPO"
+        capture_output=True, text=True, check=False,
+        cwd=str(Path(__file__).resolve().parent.parent),
     )
     assert r.returncode == 0

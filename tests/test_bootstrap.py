@@ -1,5 +1,6 @@
 import pytest
-from clinical_grpo.eval.bootstrap import bootstrap_f1_ci, BootstrapResult  # noqa: F401
+
+from clinical_grpo.eval.bootstrap import BootstrapResult, bootstrap_f1_ci  # noqa: F401
 
 
 def _perfect(n):

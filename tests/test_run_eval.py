@@ -21,8 +21,7 @@ import pandas as pd
 
 # Import once at module scope so numpy/pandas C-extensions are already loaded
 # before any test runs.  All tests re-use this module object.
-import clinical_grpo.eval.run_eval as run_eval
-
+from clinical_grpo.eval import run_eval
 
 # ---------------------------------------------------------------------------
 # Helpers
